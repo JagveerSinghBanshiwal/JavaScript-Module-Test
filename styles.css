@@ -1,0 +1,456 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap");
+
+/* Variables */
+:root {
+  --light-text: #ffffff;
+  --dark-text: hsl(229, 25%, 31%);
+  --score-text: hsl(229, 64%, 46%);
+  --outline: hsl(217, 16%, 45%);
+  --bg-grad-1: hsl(214, 47%, 23%);
+  --bg-grad-2: hsl(237, 49%, 15%);
+  --scissors-1: hsl(39, 89%, 49%);
+  --scissors-2: hsl(40, 84%, 53%);
+  --paper-1: hsl(230, 89%, 62%);
+  --paper-2: hsl(230, 89%, 65%);
+  --rock-1: hsl(349, 71%, 52%);
+  --rock-2: hsl(349, 70%, 56%);
+  --shadow-light: #00000026;
+  --shadow-med: #0000004d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto";
+  background:#8CC461;
+  min-height: 100vh;
+  text-transform: uppercase;
+  color: var(--light-text);
+}
+
+/* Main Content */
+.container {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-top: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 150px;
+  border: 3px solid white;
+  border-radius: 20px;
+  padding: 1rem 1.4rem 1rem 2rem;
+}
+
+.logo img {
+  height: 100%;
+}
+
+/* Score Section */
+.scores {
+  display: flex;
+  justify-content: space-between;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 10px;
+  width: 40%; /* Each score block will now take half the current width */
+  height: 100%;
+  line-height: 1.5;
+}
+
+.score__title {
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--score-text);
+  text-align: center;
+}
+
+.score__number {
+  font-size: 3rem; /* Reduced size for better fit */
+  font-weight: 700;
+  color: var(--dark-text);
+}
+
+/* Game */
+.game {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-areas:
+    "paper scissors"
+    "rock rock";
+  place-items: center;
+  height: 30rem;
+  padding-top: 5rem;
+}
+.game::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 28%;
+  top: 35%;
+  background: url("bg-triangle.svg") no-repeat;
+  z-index: -1;
+}
+
+.choice-btn {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
+}
+.choice {
+  position: relative;
+  width: 10rem;
+  height: 10rem;
+  background: #fff;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0.5rem var(--shadow-light);
+}
+.choice::before,
+.choice::after {
+  content: "";
+  position: absolute;
+  left: -15%;
+  top: -15%;
+  width: 130%;
+  height: 130%;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.choice::after {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.choice-btn:focus .choice::after {
+  opacity: 1;
+  box-shadow: 0 0 0 2rem #223351;
+  z-index: -2;
+}
+
+.choice img {
+  transform: scale(1.5);
+}
+
+.choice.paper::before {
+  background: linear-gradient(to bottom, var(--paper-1), var(--paper-2));
+  box-shadow: 0 0.5rem var(--shadow-med), 0 0.5rem var(--paper-2);
+}
+.choice.scissors::before {
+  background: linear-gradient(to bottom, var(--scissors-1), var(--scissors-2));
+  box-shadow: 0 0.5rem var(--shadow-med), 0 0.5rem var(--scissors-2);
+}
+.choice.rock::before {
+  background: linear-gradient(to bottom, var(--rock-1), var(--rock-2));
+  box-shadow: 0 0.5rem var(--shadow-med), 0 0.5rem var(--rock-2);
+}
+
+.choice-btn[data-choice="paper"] {
+  grid-area: paper;
+}
+.choice-btn[data-choice="scissors"] {
+  grid-area: scissors;
+}
+.choice-btn[data-choice="rock"] {
+  grid-area: rock;
+}
+
+/* Results */
+.results {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  place-items: center;
+  grid-template-areas:
+    "you-title ai-title"
+    "you-picked ai-picked";
+  max-width: 1000px;
+  margin: 0 auto;
+  
+}
+
+.results__heading {
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  padding: 4rem 0 8rem;
+}
+.results__result {
+  min-width: 10rem;
+  min-height: 10rem;
+  background:#8CC461;
+
+  border-radius: 50%;
+  transform: scale(1.4);
+  z-index: -1;
+}
+
+.results__heading:first-of-type {
+  grid-area: you-title;
+}
+.results__heading:last-of-type {
+  grid-area: ai-title;
+}
+.results__result:first-of-type {
+  grid-area: you-picked;
+}
+.results__result:last-of-type {
+  grid-area: ai-picked;
+}
+
+.results.show-winner {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "you-title . ai-title"
+    "you-picked result-winner ai-picked";
+}
+
+
+.winner .choice::after {
+  box-shadow: 0 0 0 40px #28a745,  /* First green ring */
+              0 0 0 80px #218838,  /* Second darker green ring */
+              0 0 0 130px #1e7e34; /* Third even darker green ring */
+  animation: winner 1s ease forwards;
+}
+@keyframes winner {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.results__winner {
+  grid-area: result-winner;
+  display: grid;
+  place-items: center;
+}
+.results__text {
+  font-size: 3.5rem;
+  padding-bottom: 1.5rem;
+}
+.play-again {
+  background: #fff;
+  outline: none;
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  color: var(--dark-text);
+  padding: 0.6rem 3.5rem;
+  font-family: inherit;
+  text-transform: inherit;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+.play-again:focus {
+  border: 2px solid var(--outline);
+}
+
+/* Rules Button */
+.rules-btn {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background: none;
+  outline: none;
+  border: 2px solid white;
+  border-radius: 0.6rem;
+  color: var(--light-text);
+  padding: 0.6rem 2.5rem;
+  font-family: inherit;
+  text-transform: inherit;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+}
+.rules-btn:focus {
+  border: 2px solid #fff;
+}
+.next-btn {
+  position: absolute;
+  bottom: 5rem; /* Adjusted to be above the Rules button */
+  right: 2rem;
+  background: none;
+  outline: none;
+  border: 2px solid white;
+  border-radius: 0.6rem;
+  color: var(--light-text);
+  padding: 0.6rem 2.5rem;
+  font-family: inherit;
+  text-transform: inherit;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  color:white
+}
+.next-btn:focus {
+  border: 2px solid #fff;
+}
+/* Hurry Page*/
+.hurry{
+  position:absolute;  /* position:relative;  */
+  height: 700px;   /* height: 100%; */
+  width: 1000px;    /* width:100% */
+  top:1rem;
+  left:30rem;
+  float :right;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+  background-color:#8CC461;
+  
+}
+.img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:70vh;
+}
+
+.img-container {
+  position: relative; /* This ensures the images are positioned relative to this container */
+  
+  
+   /* Background color */
+  width: 600px; /* Adjust the container size as needed */
+  height: 600px;
+  margin-top:100px;
+}
+
+.group-photo {
+  position: absolute; /* This allows the image to be positioned freely inside the container */
+  top: -30px;
+  left:-100px;
+  width: 130%; /* Make the image fit within the container */
+  z-index: 1; /* This ensures it's at a lower layer */
+}
+
+.vector-photo {
+  position: absolute; /* This allows the image to overlap the previous one */
+  top: 80px; /* Adjust this value for vertical positioning */
+  left: 120px; /* Adjust this value for horizontal positioning */
+  width:50%; /* Adjust the size of the overlapping image */
+  z-index: 2; /* Higher z-index means it will be above the group-photo */
+}
+.second{
+  color:white;
+  line-height:50px;
+  text-align: center;
+  font-weight:800;
+  font-size:60px;
+  
+
+}
+.third{
+  color:white;
+  line-height:50px;
+  text-align: center;
+  font-weight:800;
+  font-size:39px;
+}
+
+.play-again2{
+  margin:20px;
+  color:black;
+  background-color: white;
+  height:2rem;
+  width:10rem;
+  border:1px solid white;
+  border-radius: 3px;
+  display: flex;
+  justify-content:center ;
+  align-items: center;
+}
+
+a{
+  
+  background-color: white;
+  text-align: center;
+  color:black;
+  text-decoration:none ;
+  
+   
+}
+
+/* Rules Modal */
+.modal {
+  position:relative;  /* position:relative;  */
+  height: 300px;   /* height: 100%; */
+  width: 300px;    /* width:100% */
+  bottom:15rem;
+  right:5rem;
+  float :right;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+.modal__container {
+  
+  border-radius: 0.5rem;
+}
+.modal__header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 2rem 2rem 1rem;
+  position:relative;
+}
+.modal__heading {
+  font-size: 1.5rem;
+  color: var(--dark-text);
+  
+}
+.close-btn {
+  border: none;
+  outline: none;
+  background:red;
+  cursor: pointer;
+  position:relative;
+  left:220px;
+  top:35px;
+  border-radius: 50%; 
+  border: 5px solid white; 
+  height:100px;
+  width:100px; 
+  
+  color: white;
+   
+}
+
+
+.show-modal {
+  opacity: 1;
+  pointer-events: initial;
+}
+
+/* Utilities */
+.preload * {
+  transition: none;
+}
+
+.hidden {
+  display: none;
+}
+
